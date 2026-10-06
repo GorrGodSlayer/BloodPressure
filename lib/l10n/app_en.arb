@@ -1,0 +1,121 @@
+{
+  "@@locale": "en",
+  "appTitle": "Pression Tracker",
+
+  "history": "History",
+  "trends": "Trends",
+  "newReading": "New reading",
+  "takePhoto": "Take a photo of the monitor",
+  "choosePhoto": "Choose a photo",
+  "enterManually": "Enter manually",
+  "readingDisplay": "Reading the display…",
+
+  "editReading": "Edit reading",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "save": "Save",
+  "deleteReadingTitle": "Delete this reading?",
+  "deleteReadingBody": "The reading and its photo will be removed.",
+  "required": "Required",
+  "rangeError": "{min}–{max}",
+  "@rangeError": {
+    "placeholders": {"min": {"type": "String"}, "max": {"type": "String"}}
+  },
+  "photoUnavailable": "Photo unavailable",
+  "ocrIncomplete": "Could not read every value from the photo. Please fill in the missing numbers.",
+  "ocrComplete": "Values read from the photo. Check them against the display before saving.",
+  "systolic": "Systolic",
+  "diastolic": "Diastolic",
+  "pulse": "Pulse",
+  "pulseOptional": "Pulse (optional)",
+  "noteOptional": "Note (optional)",
+  "noteHint": "e.g. after coffee, left arm, before medication",
+
+  "noReadingsTitle": "No readings yet",
+  "noReadingsBody": "Tap \"New reading\" and take a photo of your blood pressure monitor. The values are read automatically and you can correct them before saving.",
+  "addReadingsForTrends": "Add readings to see trends.",
+  "noReadingsInPeriod": "No readings in this period.",
+  "averageCount": "{count, plural, =1{Average · 1 reading} other{Average · {count} readings}}",
+  "@averageCount": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "comparePrevious": "Arrows compare with the previous {period}.",
+  "@comparePrevious": {
+    "placeholders": {"period": {"type": "String"}}
+  },
+  "range7": "7 days",
+  "range30": "30 days",
+  "range90": "90 days",
+  "rangeAll": "All",
+  "readingsByCategory": "Readings by category",
+  "categoryDisclaimer": "Categories follow the ACC/AHA guideline and are for information only. Talk to your doctor about your readings.",
+
+  "catNormal": "Normal",
+  "catElevated": "Elevated",
+  "catStage1": "High – Stage 1",
+  "catStage2": "High – Stage 2",
+  "catCrisis": "Hypertensive crisis",
+  "catNormalRange": "< 120 and < 80",
+  "catElevatedRange": "120–129 and < 80",
+  "catStage1Range": "130–139 or 80–89",
+  "catStage2Range": "≥ 140 or ≥ 90",
+  "catCrisisRange": "> 180 or > 120",
+
+  "welcomeTitle": "Welcome",
+  "welcomeBody": "Create a profile to start tracking your blood pressure. Each person using this phone can have their own profile.",
+  "createProfile": "Create profile",
+  "editProfile": "Edit profile",
+  "addProfile": "Add profile",
+  "whoIsMeasuring": "Who is measuring?",
+  "name": "Name",
+  "birthYearOptional": "Birth year (optional)",
+  "invalidYear": "Enter a valid year",
+  "pinLock": "Protect with a PIN",
+  "pinLockHint": "The PIN is asked when opening this profile.",
+  "pin": "PIN",
+  "confirmPin": "Confirm PIN",
+  "newPinOptional": "New PIN (leave empty to keep the current one)",
+  "pinTooShort": "Use 4 to 8 digits",
+  "pinMismatch": "PINs do not match",
+  "enterPin": "Enter the PIN for {name}",
+  "@enterPin": {
+    "placeholders": {"name": {"type": "String"}}
+  },
+  "wrongPin": "Wrong PIN",
+  "unlock": "Unlock",
+  "switchProfile": "Switch profile",
+  "deleteProfile": "Delete profile",
+  "deleteProfileTitle": "Delete {name}?",
+  "@deleteProfileTitle": {
+    "placeholders": {"name": {"type": "String"}}
+  },
+  "deleteProfileBody": "This permanently deletes the profile and all its readings and photos.",
+  "bornIn": "Born in {year}",
+  "@bornIn": {
+    "placeholders": {"year": {"type": "String"}}
+  },
+  "readingsCount": "{count, plural, =0{No readings} =1{1 reading} other{{count} readings}}",
+  "@readingsCount": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "account": "Account",
+  "language": "Language",
+  "systemLanguage": "System default",
+
+  "help": "How it works",
+  "helpIntro": "Pression Tracker reads your blood pressure monitor from a photo and keeps a history of your measurements.",
+  "helpStep1Title": "1. Take a photo",
+  "helpStep1Body": "Tap \"New reading\" and photograph the monitor display. For the best results use good light, hold the phone straight in front of the screen, fill the frame with the display and avoid reflections.",
+  "helpStep2Title": "2. Check the values",
+  "helpStep2Body": "Systolic, diastolic and pulse are read automatically. LCD digits can be misread, so compare the numbers with the display and correct them if needed. You can also change the date and time or add a note.",
+  "helpStep3Title": "3. History",
+  "helpStep3Body": "Every reading is listed with its category colour. The arrows show the change from the previous reading: a red ▲ means higher, a green ▼ means lower. Tap a reading to edit or delete it.",
+  "helpStep4Title": "4. Trends",
+  "helpStep4Body": "Choose a period to see the average values, a chart over time and how many readings fall into each category. The arrows compare the averages with the period before.",
+  "helpCategoriesTitle": "Blood pressure categories (mmHg)",
+  "helpProfilesTitle": "Profiles",
+  "helpProfilesBody": "Each person can have their own profile with separate readings. Add a PIN to keep a profile private. Use the account button at the top right to edit, switch or delete profiles and to change the language.",
+  "helpPrivacyTitle": "Privacy",
+  "helpPrivacyBody": "Everything stays on this phone: photos are read on the device and no data is sent anywhere.",
+  "helpDisclaimer": "This app is not a medical device and does not replace the advice of your doctor."
+}
