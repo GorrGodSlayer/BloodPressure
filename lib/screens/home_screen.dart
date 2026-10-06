@@ -11,6 +11,7 @@ import '../theme.dart';
 import '../widgets/common_actions.dart';
 import 'history_view.dart';
 import 'profile_form_screen.dart';
+import 'profile_picker_screen.dart';
 import 'reading_form_screen.dart';
 import 'trends_view.dart';
 
@@ -123,54 +124,100 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _showAccount(Profile profile) async {
     final l = AppLocalizations.of(context);
-    final action = await showModalBottomSheet<_AccountAction>(
+    final people = widget.controller.store.profiles.profiles.value;
+    // Either another Profile to switch to, or an _AccountAction.
+    final result = await showModalBottomSheet<Object>(
       context: context,
       showDragHandle: true,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: CircleAvatar(child: Text(profile.initial)),
-              title: Text(
-                profile.name,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              subtitle: Text(
-                l.readingsCount(_repository.readings.value.length),
-              ),
+      isScrollControlled: true,
+      builder: (context) {
+        final theme = Theme.of(context);
+        return SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+                  child: Text(
+                    l.peopleOnDevice,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+                for (final p in people)
+                  ListTile(
+                    leading: CircleAvatar(child: Text(p.initial)),
+                    title: Text(p.name),
+                    subtitle: Text(
+                      p.id == profile.id
+                          ? '${l.viewingNow} · ${l.readingsCount(_repository.readings.value.length)}'
+                          : (p.birthYear == null
+                                ? l.tapToSwitch
+                                : l.bornIn(p.birthYear.toString())),
+                    ),
+                    selected: p.id == profile.id,
+                    trailing: p.id == profile.id
+                        ? const Icon(Icons.check_circle)
+                        : (p.hasPin ? const Icon(Icons.lock_outline) : null),
+                    onTap: p.id == profile.id
+                        ? null
+                        : () => Navigator.pop(context, p),
+                  ),
+                ListTile(
+                  leading: const CircleAvatar(
+                    child: Icon(Icons.person_add_alt),
+                  ),
+                  title: Text(l.addProfile),
+                  onTap: () => Navigator.pop(context, _AccountAction.add),
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.edit_outlined),
+                  title: Text(l.editProfile),
+                  onTap: () => Navigator.pop(context, _AccountAction.edit),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.translate),
+                  title: Text(l.language),
+                  onTap: () => Navigator.pop(context, _AccountAction.language),
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.delete_outline,
+                    color: theme.colorScheme.error,
+                  ),
+                  title: Text(l.deleteProfile),
+                  onTap: () => Navigator.pop(context, _AccountAction.delete),
+                ),
+                const Center(child: CreditText()),
+              ],
             ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.edit_outlined),
-              title: Text(l.editProfile),
-              onTap: () => Navigator.pop(context, _AccountAction.edit),
-            ),
-            ListTile(
-              leading: const Icon(Icons.switch_account_outlined),
-              title: Text(l.switchProfile),
-              onTap: () => Navigator.pop(context, _AccountAction.switchProfile),
-            ),
-            ListTile(
-              leading: const Icon(Icons.translate),
-              title: Text(l.language),
-              onTap: () => Navigator.pop(context, _AccountAction.language),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.delete_outline,
-                color: Theme.of(context).colorScheme.error,
-              ),
-              title: Text(l.deleteProfile),
-              onTap: () => Navigator.pop(context, _AccountAction.delete),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
-    if (action == null || !mounted) return;
+    if (result == null || !mounted) return;
 
-    switch (action) {
+    if (result is Profile) {
+      if (result.hasPin &&
+          !await showPinDialog(context, widget.controller, result)) {
+        return;
+      }
+      await widget.controller.signIn(result);
+      return;
+    }
+
+    switch (result as _AccountAction) {
+      case _AccountAction.add:
+        final added = await Navigator.of(context).push<Profile>(
+          MaterialPageRoute(
+            builder: (_) => ProfileFormScreen(controller: widget.controller),
+          ),
+        );
+        if (added != null) await widget.controller.signIn(added);
       case _AccountAction.edit:
         await Navigator.of(context).push(
           MaterialPageRoute(
@@ -180,8 +227,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         );
-      case _AccountAction.switchProfile:
-        widget.controller.signOut();
       case _AccountAction.language:
         await showLanguageDialog(context, widget.controller);
       case _AccountAction.delete:
@@ -224,12 +269,18 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Text(_tab == 0 ? l.history : l.trends),
           actions: [
             const HelpButton(),
-            IconButton(
-              tooltip: l.account,
-              onPressed: () => _showAccount(profile),
-              icon: CircleAvatar(radius: 15, child: Text(profile.initial)),
+            Tooltip(
+              message: l.account,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 150),
+                child: ActionChip(
+                  avatar: CircleAvatar(child: Text(profile.initial)),
+                  label: Text(profile.name, overflow: TextOverflow.ellipsis),
+                  onPressed: () => _showAccount(profile),
+                ),
+              ),
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: 8),
           ],
         ),
         body: IndexedStack(
@@ -265,4 +316,4 @@ class _HomeScreenState extends State<HomeScreen> {
 
 enum _Source { camera, gallery, manual }
 
-enum _AccountAction { edit, switchProfile, language, delete }
+enum _AccountAction { add, edit, language, delete }

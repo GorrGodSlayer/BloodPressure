@@ -33,7 +33,7 @@ unknown sources).
 flutter pub get
 flutter test
 flutter run                      # device or emulator
-flutter run -d web-server        # browser UI preview with sample data
+flutter run -d web-server        # browser UI preview (in-memory)
 flutter build apk --release
 ```
 

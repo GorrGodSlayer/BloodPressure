@@ -65,7 +65,10 @@
   "welcomeBody": "Create a profile to start tracking your blood pressure. Each person using this phone can have their own profile.",
   "createProfile": "Create profile",
   "editProfile": "Edit profile",
-  "addProfile": "Add profile",
+  "addProfile": "Add person",
+  "peopleOnDevice": "People on this device",
+  "viewingNow": "Viewing now",
+  "tapToSwitch": "Tap to switch",
   "whoIsMeasuring": "Who is measuring?",
   "name": "Name",
   "birthYearOptional": "Birth year (optional)",
@@ -114,8 +117,9 @@
   "helpStep4Body": "Choose a period to see the average values, a chart over time and how many readings fall into each category. The arrows compare the averages with the period before.",
   "helpCategoriesTitle": "Blood pressure categories (mmHg)",
   "helpProfilesTitle": "Profiles",
-  "helpProfilesBody": "Each person can have their own profile with separate readings. Add a PIN to keep a profile private. Use the account button at the top right to edit, switch or delete profiles and to change the language.",
+  "helpProfilesBody": "Every family member can have their own profile with separate readings, history and trends. Tap the name at the top right to switch to another person, add a new one, edit or delete a profile, or change the language. Add a PIN to keep a profile private.",
   "helpPrivacyTitle": "Privacy",
   "helpPrivacyBody": "Everything stays on this phone: photos are read on the device and no data is sent anywhere.",
+  "madeBy": "Made by Alex Rogatski",
   "helpDisclaimer": "This app is not a medical device and does not replace the advice of your doctor."
 }

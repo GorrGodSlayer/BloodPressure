@@ -183,7 +183,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get editProfile => 'Modifica profilo';
 
   @override
-  String get addProfile => 'Aggiungi profilo';
+  String get addProfile => 'Aggiungi persona';
+
+  @override
+  String get peopleOnDevice => 'Persone su questo dispositivo';
+
+  @override
+  String get viewingNow => 'In visualizzazione';
+
+  @override
+  String get tapToSwitch => 'Tocca per passare a questa persona';
 
   @override
   String get whoIsMeasuring => 'Chi sta misurando?';
@@ -315,7 +324,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get helpProfilesBody =>
-      'Ogni persona può avere il proprio profilo con misurazioni separate. Aggiungi un PIN per mantenere privato un profilo. Usa il pulsante account in alto a destra per modificare, cambiare o eliminare i profili e per cambiare lingua.';
+      'Ogni membro della famiglia può avere il proprio profilo con misurazioni, storico e andamento separati. Tocca il nome in alto a destra per passare a un\'altra persona, aggiungerne una nuova, modificare o eliminare un profilo o cambiare lingua. Aggiungi un PIN per mantenere privato un profilo.';
 
   @override
   String get helpPrivacyTitle => 'Privacy';
@@ -323,6 +332,9 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get helpPrivacyBody =>
       'Tutto resta su questo telefono: le foto vengono lette sul dispositivo e nessun dato viene inviato altrove.';
+
+  @override
+  String get madeBy => 'Realizzato da Alex Rogatski';
 
   @override
   String get helpDisclaimer =>

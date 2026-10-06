@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../models/bp_category.dart';
 import '../theme.dart';
+import '../widgets/common_actions.dart';
 
 class HelpScreen extends StatelessWidget {
   const HelpScreen({super.key});
@@ -68,6 +69,7 @@ class HelpScreen extends StatelessWidget {
                 ),
               ),
             ),
+            const CreditText(),
           ],
         ),
       ),

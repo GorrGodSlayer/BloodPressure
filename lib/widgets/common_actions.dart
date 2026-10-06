@@ -4,6 +4,26 @@ import '../app_controller.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/help_screen.dart';
 
+/// Small "Made by" credit line.
+class CreditText extends StatelessWidget {
+  const CreditText({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Text(
+        AppLocalizations.of(context).madeBy,
+        textAlign: TextAlign.center,
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+    );
+  }
+}
+
 /// The "?" button that opens the help screen.
 class HelpButton extends StatelessWidget {
   const HelpButton({super.key});

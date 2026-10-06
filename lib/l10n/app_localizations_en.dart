@@ -180,7 +180,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editProfile => 'Edit profile';
 
   @override
-  String get addProfile => 'Add profile';
+  String get addProfile => 'Add person';
+
+  @override
+  String get peopleOnDevice => 'People on this device';
+
+  @override
+  String get viewingNow => 'Viewing now';
+
+  @override
+  String get tapToSwitch => 'Tap to switch';
 
   @override
   String get whoIsMeasuring => 'Who is measuring?';
@@ -310,7 +319,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get helpProfilesBody =>
-      'Each person can have their own profile with separate readings. Add a PIN to keep a profile private. Use the account button at the top right to edit, switch or delete profiles and to change the language.';
+      'Every family member can have their own profile with separate readings, history and trends. Tap the name at the top right to switch to another person, add a new one, edit or delete a profile, or change the language. Add a PIN to keep a profile private.';
 
   @override
   String get helpPrivacyTitle => 'Privacy';
@@ -318,6 +327,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get helpPrivacyBody =>
       'Everything stays on this phone: photos are read on the device and no data is sent anywhere.';
+
+  @override
+  String get madeBy => 'Made by Alex Rogatski';
 
   @override
   String get helpDisclaimer =>

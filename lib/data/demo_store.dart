@@ -6,8 +6,7 @@ import 'app_store.dart';
 import 'profile_repository.dart';
 import 'reading_repository.dart';
 
-/// In-memory store for the browser preview. Each new profile starts with
-/// two months of sample readings; nothing survives a page reload.
+/// In-memory store for the browser preview; nothing survives a page reload.
 class DemoAppStore extends AppStore {
   @override
   final MemoryProfileRepository profiles = MemoryProfileRepository();
@@ -15,8 +14,8 @@ class DemoAppStore extends AppStore {
   final _readings = <int, DemoReadingRepository>{};
 
   @override
-  Future<ReadingRepository> readingsFor(Profile profile) async => _readings
-      .putIfAbsent(profile.id!, () => DemoReadingRepository(seed: profile.id!));
+  Future<ReadingRepository> readingsFor(Profile profile) async =>
+      _readings.putIfAbsent(profile.id!, DemoReadingRepository.new);
 
   @override
   Future<void> deleteProfile(Profile profile) async {
@@ -52,37 +51,6 @@ class MemoryProfileRepository extends ProfileRepository {
 }
 
 class DemoReadingRepository extends ReadingRepository {
-  DemoReadingRepository({int seed = 7}) {
-    final rng = Random(seed);
-    final now = DateTime.now();
-    var id = 0;
-    for (var day = 60; day >= 0; day--) {
-      // Morning reading most days, evening reading some days.
-      for (final hour in [8, 20]) {
-        if (hour == 20 && rng.nextInt(3) != 0) continue;
-        if (rng.nextInt(6) == 0) continue;
-        // Gentle improvement over the two months.
-        final trend = day / 60;
-        _items.add(
-          Reading(
-            id: ++id,
-            timestamp: DateTime(
-              now.year,
-              now.month,
-              now.day - day,
-              hour,
-              rng.nextInt(50),
-            ),
-            systolic: (124 + 14 * trend + rng.nextInt(11) - 5).round(),
-            diastolic: (80 + 8 * trend + rng.nextInt(7) - 3).round(),
-            pulse: 62 + rng.nextInt(16),
-          ),
-        );
-      }
-    }
-    _publish();
-  }
-
   final List<Reading> _items = [];
 
   void _publish() {

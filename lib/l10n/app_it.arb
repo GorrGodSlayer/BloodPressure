@@ -56,7 +56,10 @@
   "welcomeBody": "Crea un profilo per iniziare a monitorare la pressione. Ogni persona che usa questo telefono può avere il proprio profilo.",
   "createProfile": "Crea profilo",
   "editProfile": "Modifica profilo",
-  "addProfile": "Aggiungi profilo",
+  "addProfile": "Aggiungi persona",
+  "peopleOnDevice": "Persone su questo dispositivo",
+  "viewingNow": "In visualizzazione",
+  "tapToSwitch": "Tocca per passare a questa persona",
   "whoIsMeasuring": "Chi sta misurando?",
   "name": "Nome",
   "birthYearOptional": "Anno di nascita (facoltativo)",
@@ -93,8 +96,9 @@
   "helpStep4Body": "Scegli un periodo per vedere i valori medi, un grafico nel tempo e quante misurazioni rientrano in ogni categoria. Le frecce confrontano le medie con il periodo precedente.",
   "helpCategoriesTitle": "Categorie di pressione (mmHg)",
   "helpProfilesTitle": "Profili",
-  "helpProfilesBody": "Ogni persona può avere il proprio profilo con misurazioni separate. Aggiungi un PIN per mantenere privato un profilo. Usa il pulsante account in alto a destra per modificare, cambiare o eliminare i profili e per cambiare lingua.",
+  "helpProfilesBody": "Ogni membro della famiglia può avere il proprio profilo con misurazioni, storico e andamento separati. Tocca il nome in alto a destra per passare a un'altra persona, aggiungerne una nuova, modificare o eliminare un profilo o cambiare lingua. Aggiungi un PIN per mantenere privato un profilo.",
   "helpPrivacyTitle": "Privacy",
   "helpPrivacyBody": "Tutto resta su questo telefono: le foto vengono lette sul dispositivo e nessun dato viene inviato altrove.",
+  "madeBy": "Realizzato da Alex Rogatski",
   "helpDisclaimer": "Questa app non è un dispositivo medico e non sostituisce il parere del tuo medico."
 }

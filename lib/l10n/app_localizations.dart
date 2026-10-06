@@ -407,8 +407,26 @@ abstract class AppLocalizations {
   /// No description provided for @addProfile.
   ///
   /// In en, this message translates to:
-  /// **'Add profile'**
+  /// **'Add person'**
   String get addProfile;
+
+  /// No description provided for @peopleOnDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'People on this device'**
+  String get peopleOnDevice;
+
+  /// No description provided for @viewingNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Viewing now'**
+  String get viewingNow;
+
+  /// No description provided for @tapToSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to switch'**
+  String get tapToSwitch;
 
   /// No description provided for @whoIsMeasuring.
   ///
@@ -623,7 +641,7 @@ abstract class AppLocalizations {
   /// No description provided for @helpProfilesBody.
   ///
   /// In en, this message translates to:
-  /// **'Each person can have their own profile with separate readings. Add a PIN to keep a profile private. Use the account button at the top right to edit, switch or delete profiles and to change the language.'**
+  /// **'Every family member can have their own profile with separate readings, history and trends. Tap the name at the top right to switch to another person, add a new one, edit or delete a profile, or change the language. Add a PIN to keep a profile private.'**
   String get helpProfilesBody;
 
   /// No description provided for @helpPrivacyTitle.
@@ -637,6 +655,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Everything stays on this phone: photos are read on the device and no data is sent anywhere.'**
   String get helpPrivacyBody;
+
+  /// No description provided for @madeBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Made by Alex Rogatski'**
+  String get madeBy;
 
   /// No description provided for @helpDisclaimer.
   ///

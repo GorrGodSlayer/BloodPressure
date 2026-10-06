@@ -67,6 +67,8 @@ class ProfilePickerScreen extends StatelessWidget {
                 icon: const Icon(Icons.person_add_alt),
                 label: Text(l.addProfile),
               ),
+              const SizedBox(height: 16),
+              const CreditText(),
             ],
           ),
         ),

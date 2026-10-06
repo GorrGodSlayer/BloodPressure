@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pression_tracker/data/demo_store.dart';
+import 'package:pression_tracker/models/reading.dart';
 
 void main() {
   group('ProfileRepository', () {
@@ -41,10 +42,30 @@ void main() {
     });
   });
 
+  test('each family member has separate readings', () async {
+    final store = DemoAppStore();
+    final mum = await store.profiles.create(name: 'Mum');
+    final dad = await store.profiles.create(name: 'Dad');
+    final mumReadings = await store.readingsFor(mum);
+    final dadReadings = await store.readingsFor(dad);
+    expect(mumReadings.readings.value, isEmpty, reason: 'clean slate');
+
+    await mumReadings.save(
+      Reading(timestamp: DateTime(2026, 10, 1), systolic: 130, diastolic: 85),
+    );
+
+    expect(mumReadings.readings.value, hasLength(1));
+    expect(dadReadings.readings.value, isEmpty);
+    expect((await store.readingsFor(mum)).readings.value, hasLength(1));
+  });
+
   test('DemoAppStore deletes a profile with its readings', () async {
     final store = DemoAppStore();
     final p = await store.profiles.create(name: 'Demo');
     final readings = await store.readingsFor(p);
+    await readings.save(
+      Reading(timestamp: DateTime(2026, 10, 1), systolic: 120, diastolic: 80),
+    );
     expect(readings.readings.value, isNotEmpty);
 
     await store.deleteProfile(p);

@@ -177,6 +177,8 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                 icon: const Icon(Icons.check),
                 label: Text(widget.existing == null ? l.createProfile : l.save),
               ),
+              const SizedBox(height: 16),
+              const CreditText(),
             ],
           ),
         ),
