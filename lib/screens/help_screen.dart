@@ -17,7 +17,12 @@ class HelpScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(title: Text(l.help)),
         body: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+          padding: EdgeInsets.fromLTRB(
+            16,
+            8,
+            16,
+            32 + MediaQuery.paddingOf(context).bottom,
+          ),
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),

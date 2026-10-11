@@ -19,7 +19,7 @@ class HistoryView extends StatelessWidget {
       builder: (context, readings, _) {
         if (readings.isEmpty) return const _EmptyState();
         return ListView.separated(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 96),
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
           itemCount: readings.length,
           separatorBuilder: (_, _) => const SizedBox(height: 4),
           itemBuilder: (context, i) => _ReadingTile(

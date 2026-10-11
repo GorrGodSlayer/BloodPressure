@@ -122,6 +122,12 @@ abstract class AppLocalizations {
   /// **'New reading'**
   String get newReading;
 
+  /// No description provided for @measure.
+  ///
+  /// In en, this message translates to:
+  /// **'Measure'**
+  String get measure;
+
   /// No description provided for @takePhoto.
   ///
   /// In en, this message translates to:

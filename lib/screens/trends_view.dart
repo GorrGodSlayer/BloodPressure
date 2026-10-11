@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../data/reading_repository.dart';
+import '../data/settings.dart';
 import '../l10n/app_localizations.dart';
 import '../models/bp_category.dart';
 import '../models/reading.dart';
@@ -15,10 +16,18 @@ const _sysColor = Color(0xFFC62828);
 const _diaColor = Color(0xFF1565C0);
 const _pulseColor = Color(0xFF8A8A8A);
 
+/// A line that can be shown or hidden on the trends chart.
+enum ChartMetric { systolic, diastolic, pulse }
+
 class TrendsView extends StatefulWidget {
-  const TrendsView({super.key, required this.repository});
+  const TrendsView({
+    super.key,
+    required this.repository,
+    required this.settings,
+  });
 
   final ReadingRepository repository;
+  final Settings settings;
 
   @override
   State<TrendsView> createState() => _TrendsViewState();
@@ -26,6 +35,18 @@ class TrendsView extends StatefulWidget {
 
 class _TrendsViewState extends State<TrendsView> {
   TrendRange _range = TrendRange.days30;
+  late Set<ChartMetric> _metrics = {
+    for (final m in ChartMetric.values)
+      if (widget.settings.chartMetrics?.contains(m.name) ?? true) m,
+  };
+
+  void _toggle(ChartMetric metric) {
+    final next = {..._metrics};
+    if (!next.remove(metric)) next.add(metric);
+    if (next.isEmpty) return; // keep at least one line on the chart
+    setState(() => _metrics = next);
+    widget.settings.setChartMetrics([for (final m in next) m.name]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +62,7 @@ class _TrendsViewState extends State<TrendsView> {
         final previous = previousPeriod(readings, _range, now);
 
         return ListView(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 96),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
           children: [
             SegmentedButton<TrendRange>(
               segments: [
@@ -65,7 +86,11 @@ class _TrendsViewState extends State<TrendsView> {
                 range: _range,
               ),
               const SizedBox(height: 12),
-              _ChartCard(readings: current),
+              _ChartCard(
+                readings: current,
+                metrics: _metrics,
+                onToggle: _toggle,
+              ),
               const SizedBox(height: 12),
               _CategoryCard(readings: current),
             ],
@@ -149,10 +174,16 @@ class _AverageCard extends StatelessWidget {
 }
 
 class _ChartCard extends StatelessWidget {
-  const _ChartCard({required this.readings});
+  const _ChartCard({
+    required this.readings,
+    required this.metrics,
+    required this.onToggle,
+  });
 
   /// Newest first.
   final List<Reading> readings;
+  final Set<ChartMetric> metrics;
+  final ValueChanged<ChartMetric> onToggle;
 
   @override
   Widget build(BuildContext context) {
@@ -169,15 +200,26 @@ class _ChartCard extends StatelessWidget {
       maxX += day / 2;
     }
 
+    final showSys = metrics.contains(ChartMetric.systolic);
+    final showDia = metrics.contains(ChartMetric.diastolic);
+    final showPulse = metrics.contains(ChartMetric.pulse);
     final values = [
       for (final r in ordered) ...[
-        r.systolic,
-        r.diastolic,
-        if (r.pulse != null) r.pulse!,
+        if (showSys) r.systolic,
+        if (showDia) r.diastolic,
+        if (showPulse && r.pulse != null) r.pulse!,
       ],
     ];
-    final minY = (math.min(values.reduce(math.min), 60) / 10).floor() * 10.0;
-    final maxY = (math.max(values.reduce(math.max), 140) / 10).ceil() * 10.0;
+    // Fit the axis to the visible lines, keeping a sensible minimum span.
+    final low = values.isEmpty ? 60 : values.reduce(math.min);
+    final high = values.isEmpty ? 140 : values.reduce(math.max);
+    var minY = ((low - 5) / 10).floor() * 10.0;
+    var maxY = ((high + 5) / 10).ceil() * 10.0;
+    if (maxY - minY < 40) {
+      final mid = (minY + maxY) / 2;
+      minY = ((mid - 20) / 10).floor() * 10.0;
+      maxY = minY + 40;
+    }
     final spanDays = (maxX - minX) / day;
     final dateFormat = spanDays > 60
         ? DateFormat.MMMd(l.localeName)
@@ -209,38 +251,43 @@ class _ChartCard extends StatelessWidget {
                   minY: minY,
                   maxY: maxY,
                   lineBarsData: [
-                    line([
-                      for (final r in ordered)
-                        FlSpot(x(r), r.systolic.toDouble()),
-                    ], _sysColor),
-                    line([
-                      for (final r in ordered)
-                        FlSpot(x(r), r.diastolic.toDouble()),
-                    ], _diaColor),
-                    line(
-                      [
+                    if (showSys)
+                      line([
                         for (final r in ordered)
-                          if (r.pulse != null)
-                            FlSpot(x(r), r.pulse!.toDouble()),
-                      ],
-                      _pulseColor,
-                      dashed: true,
-                    ),
+                          FlSpot(x(r), r.systolic.toDouble()),
+                      ], _sysColor),
+                    if (showDia)
+                      line([
+                        for (final r in ordered)
+                          FlSpot(x(r), r.diastolic.toDouble()),
+                      ], _diaColor),
+                    if (showPulse)
+                      line(
+                        [
+                          for (final r in ordered)
+                            if (r.pulse != null)
+                              FlSpot(x(r), r.pulse!.toDouble()),
+                        ],
+                        _pulseColor,
+                        dashed: true,
+                      ),
                   ],
                   extraLinesData: ExtraLinesData(
                     horizontalLines: [
-                      HorizontalLine(
-                        y: 120,
-                        color: _sysColor.withValues(alpha: 0.35),
-                        strokeWidth: 1,
-                        dashArray: [2, 4],
-                      ),
-                      HorizontalLine(
-                        y: 80,
-                        color: _diaColor.withValues(alpha: 0.35),
-                        strokeWidth: 1,
-                        dashArray: [2, 4],
-                      ),
+                      if (showSys && minY <= 120 && 120 <= maxY)
+                        HorizontalLine(
+                          y: 120,
+                          color: _sysColor.withValues(alpha: 0.35),
+                          strokeWidth: 1,
+                          dashArray: [2, 4],
+                        ),
+                      if (showDia && minY <= 80 && 80 <= maxY)
+                        HorizontalLine(
+                          y: 80,
+                          color: _diaColor.withValues(alpha: 0.35),
+                          strokeWidth: 1,
+                          dashArray: [2, 4],
+                        ),
                     ],
                   ),
                   gridData: FlGridData(
@@ -306,36 +353,35 @@ class _ChartCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
+            // Tap a chip to show or hide that line.
             Wrap(
-              spacing: 16,
+              spacing: 8,
+              runSpacing: 4,
+              alignment: WrapAlignment.center,
               children: [
-                _Legend(color: _sysColor, label: l.systolic),
-                _Legend(color: _diaColor, label: l.diastolic),
-                _Legend(color: _pulseColor, label: l.pulse),
+                for (final (metric, color, label) in [
+                  (ChartMetric.systolic, _sysColor, l.systolic),
+                  (ChartMetric.diastolic, _diaColor, l.diastolic),
+                  (ChartMetric.pulse, _pulseColor, l.pulse),
+                ])
+                  FilterChip(
+                    avatar: CircleAvatar(radius: 6, backgroundColor: color),
+                    label: Text(label),
+                    selected: metrics.contains(metric),
+                    showCheckmark: false,
+                    selectedColor: color.withValues(alpha: 0.16),
+                    side: BorderSide(
+                      color: metrics.contains(metric)
+                          ? color
+                          : theme.colorScheme.outlineVariant,
+                    ),
+                    onSelected: (_) => onToggle(metric),
+                  ),
               ],
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _Legend extends StatelessWidget {
-  const _Legend({required this.color, required this.label});
-
-  final Color color;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(width: 12, height: 3, color: color),
-        const SizedBox(width: 6),
-        Text(label, style: Theme.of(context).textTheme.bodySmall),
-      ],
     );
   }
 }

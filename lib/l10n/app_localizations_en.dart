@@ -22,6 +22,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newReading => 'New reading';
 
   @override
+  String get measure => 'Measure';
+
+  @override
   String get takePhoto => 'Take a photo of the monitor';
 
   @override

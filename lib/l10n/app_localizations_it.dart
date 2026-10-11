@@ -22,6 +22,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get newReading => 'Nuova misurazione';
 
   @override
+  String get measure => 'Misura';
+
+  @override
   String get takePhoto => 'Scatta una foto del misuratore';
 
   @override

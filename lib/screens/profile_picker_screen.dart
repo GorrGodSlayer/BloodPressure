@@ -45,7 +45,12 @@ class ProfilePickerScreen extends StatelessWidget {
         body: ValueListenableBuilder<List<Profile>>(
           valueListenable: controller.store.profiles.profiles,
           builder: (context, profiles, _) => ListView(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.fromLTRB(
+              16,
+              16,
+              16,
+              16 + MediaQuery.paddingOf(context).bottom,
+            ),
             children: [
               for (final p in profiles)
                 Card(

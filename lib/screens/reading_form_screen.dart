@@ -174,7 +174,13 @@ class _ReadingFormScreenState extends State<ReadingFormScreen> {
         body: Form(
           key: _formKey,
           child: ListView(
-            padding: const EdgeInsets.all(16),
+            // Keep the Save button clear of the system navigation bar.
+            padding: EdgeInsets.fromLTRB(
+              16,
+              16,
+              16,
+              16 + MediaQuery.paddingOf(context).bottom,
+            ),
             children: [
               if (imagePath != null)
                 GestureDetector(

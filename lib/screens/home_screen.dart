@@ -287,21 +287,31 @@ class _HomeScreenState extends State<HomeScreen> {
           index: _tab,
           children: [
             HistoryView(repository: _repository),
-            TrendsView(repository: _repository),
+            TrendsView(
+              repository: _repository,
+              settings: widget.controller.settings,
+            ),
           ],
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: _newReading,
-          icon: const Icon(Icons.photo_camera),
-          label: Text(l.newReading),
-        ),
+        // History | camera | Trends. The middle item is an action, not a tab.
         bottomNavigationBar: NavigationBar(
-          selectedIndex: _tab,
-          onDestinationSelected: (i) => setState(() => _tab = i),
+          selectedIndex: _tab == 0 ? 0 : 2,
+          onDestinationSelected: (i) {
+            if (i == 1) {
+              _newReading();
+            } else {
+              setState(() => _tab = i == 0 ? 0 : 1);
+            }
+          },
           destinations: [
             NavigationDestination(
               icon: const Icon(Icons.list_alt),
               label: l.history,
+            ),
+            NavigationDestination(
+              icon: const _CameraButton(),
+              label: l.measure,
+              tooltip: l.newReading,
             ),
             NavigationDestination(
               icon: const Icon(Icons.show_chart),
@@ -310,6 +320,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Prominent camera icon for the middle of the bottom bar.
+class _CameraButton extends StatelessWidget {
+  const _CameraButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      width: 56,
+      height: 36,
+      decoration: BoxDecoration(
+        color: scheme.primary,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Icon(Icons.photo_camera, color: scheme.onPrimary),
     );
   }
 }

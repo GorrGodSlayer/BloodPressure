@@ -8,6 +8,7 @@ class Settings {
 
   static const _lastProfileKey = 'lastProfileId';
   static const _localeKey = 'localeCode';
+  static const _chartKey = 'chartMetrics';
 
   static Future<Settings> load() async =>
       Settings._(await SharedPreferences.getInstance());
@@ -20,6 +21,12 @@ class Settings {
 
   /// Language code chosen in the app, or null to follow the system.
   String? get localeCode => _prefs.getString(_localeKey);
+
+  /// Metrics shown on the trends chart, or null for the default (all).
+  List<String>? get chartMetrics => _prefs.getStringList(_chartKey);
+
+  Future<void> setChartMetrics(List<String> names) =>
+      _prefs.setStringList(_chartKey, names);
 
   Future<void> setLocaleCode(String? code) => code == null
       ? _prefs.remove(_localeKey)
