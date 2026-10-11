@@ -5,8 +5,11 @@ electronic blood pressure monitor.
 
 ## Features
 
-- **Photo reading** – take or pick a photo of the monitor; on-device ML Kit OCR
-  reads systolic, diastolic and pulse. Values are always shown for
+- **Photo reading** – take or pick a photo of the monitor; the values are read
+  on the device, by a purpose-built reader for seven-segment LCD digits plus
+  ML Kit OCR for monitors with regular fonts. It copes with shadows,
+  tilted or italic digits, backlit displays, over- or under-exposure and a
+  monitor that fills only part of the frame. Values are always shown for
   confirmation and can be corrected before saving.
 - **History** – every reading with its ACC/AHA category and the change from the
   previous reading.
@@ -44,11 +47,13 @@ Strings live in `lib/l10n/app_en.arb` and `lib/l10n/app_it.arb`;
 
 | Path | Purpose |
 | --- | --- |
-| `lib/services/bp_parser.dart` | Picks SYS/DIA/PULSE out of OCR text |
-| `lib/services/ocr_service.dart` | ML Kit text recognition |
+| `lib/services/seven_segment.dart` | Reads seven-segment LCD digits from pixels |
+| `lib/services/bp_parser.dart` | Picks SYS/DIA/PULSE out of recognised numbers |
+| `lib/services/ocr_service.dart` | Runs ML Kit and the segment reader, merges results |
+| `tool/ocr_probe.dart` | Stress-tests the reader on 130+ image variants (`dart run tool/ocr_probe.dart`) |
 | `lib/data/` | SQLite store, profiles, settings, browser demo store |
 | `lib/screens/` | UI |
-| `test/` | Parser, statistics, profile and localization tests |
+| `test/` | Reader (real photo + synthetic displays), parser, statistics, profile and localization tests |
 
 The release APK is currently signed with the debug key; set up a release
 keystore before publishing to the Play Store.
