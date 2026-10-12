@@ -52,6 +52,7 @@ void main() {
     });
 
     test('grainy', () => expect(_read(noisy(_photo(), 20)), want));
+    test('very grainy', () => expect(_read(noisy(_photo(), 40)), want));
 
     test('shadow across the display', () {
       expect(_read(shadowGradient(_photo())), want);

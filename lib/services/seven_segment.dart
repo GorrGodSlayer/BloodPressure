@@ -50,6 +50,16 @@ class SevenSegmentReader {
     _a | _b | _c | _f | _g: '9',
   };
 
+  /// Font variants (a "6" without its top bar, a "7" with a left serif, a
+  /// "9" without its base) are already lenient shapes, so a misread segment
+  /// is only tolerated against the standard ones: otherwise an icon like a
+  /// heart, two segments away from any real digit, passes as a "6".
+  static const _variants = <int>{
+    _c | _d | _e | _f | _g,
+    _a | _b | _c | _f,
+    _a | _b | _c | _f | _g,
+  };
+
   static List<OcrToken> read(img.Image source, {SegmentDebug? debug}) {
     final oriented = img.bakeOrientation(source);
     var full = _readFrame(oriented, _workWidth, debug);
@@ -248,7 +258,8 @@ class SevenSegmentReader {
     debug?.call(
       '  gap $gap blobs ${blobs.map((b) => '${b.left},${b.top} '
           '${b.width}x${b.height}=${decoded[b] ?? '?'}'
-          '(${_segmentNames(_segments(b, mask, w))})').join(' | ')}',
+          '(${_segmentNames(_segments(b, mask, w))})'
+          't${_thickness(b, mask, w)}').join(' | ')}',
     );
     final groups = _groupLines(blobs, decoded);
     var candidates = groups
@@ -263,10 +274,15 @@ class SevenSegmentReader {
     final tokens = <OcrToken>[];
     final read = <_Blob>[];
     for (var row in lines.expand(_splitRow)) {
-      // Icons beside a number (a heart, an "OK" badge) are shorter than
-      // its digits and never decode; ignore them at either end.
+      // Icons beside a number (a heart, an "OK" badge) never decode and are
+      // shorter or narrower than its digits (a narrow bar, though, could be
+      // a "1" that lost its shape); ignore them at either end.
       final tallest = row.map((b) => b.height).reduce(math.max);
-      bool icon(_Blob b) => decoded[b] == null && b.height < tallest * 0.8;
+      final widest = row.map((b) => b.width).reduce(math.max);
+      bool icon(_Blob b) =>
+          decoded[b] == null &&
+          (b.height < tallest * 0.8 ||
+              (b.width < widest * 0.75 && b.width > b.height * 0.4));
       while (row.length > 1 && icon(row.first)) {
         row = row.sublist(1);
       }
@@ -440,6 +456,7 @@ class SevenSegmentReader {
 
     // Tolerate one misread segment if only one digit is that close.
     final close = _digits.entries
+        .where((e) => !_variants.contains(e.key))
         .where((e) => _bitCount(e.key ^ bits) == 1)
         .map((e) => e.value)
         .toSet();
@@ -465,9 +482,10 @@ class SevenSegmentReader {
   /// column; a vertical one is a long run through the quarter-height row of
   /// the top or bottom half, on the left or right side. Measuring through
   /// those points ignores specks and shadow fragments stuck to the digit.
-  static int _segments(_Blob b, Uint8List mask, int w) {
+  /// Stroke thickness of a blob: most rows cut across a vertical stroke, so
+  /// the median of each row's longest run is the thickness. 0 when empty.
+  static int _thickness(_Blob b, Uint8List mask, int w) {
     final bw = b.width, bh = b.height;
-
     final runs = <int>[];
     for (var y = 0; y < bh; y++) {
       var longest = 0, run = 0;
@@ -482,11 +500,15 @@ class SevenSegmentReader {
       }
       if (longest > 0) runs.add(longest);
     }
-    if (runs.isEmpty) return -1;
+    if (runs.isEmpty) return 0;
     runs.sort();
-    // Most rows cut across a vertical stroke, so the median run is the
-    // stroke thickness.
-    final t = runs[runs.length ~/ 2];
+    return runs[runs.length ~/ 2];
+  }
+
+  static int _segments(_Blob b, Uint8List mask, int w) {
+    final bw = b.width, bh = b.height;
+    final t = _thickness(b, mask, w);
+    if (t == 0) return -1;
     // A tall shape no wider than a stroke is a "1".
     if (bw <= t * 2.2) return bw < bh * 0.5 ? _one : -1;
 
